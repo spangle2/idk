@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cognitive Challenge Suite</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f8f8f8;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 450px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header {
+            margin-bottom: 25px;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #222;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .game-area {
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            padding: 20px;
+            background: #fdfdfd;
+        }
+
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin: 20px 0;
+        }
+
+        .memory-card {
+            width: 60px;
+            height: 60px;
+            background: #f0f0f0;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .memory-card.active {
+            background: #333;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .memory-card.correct {
+            background: #4a4a4a;
+            border-color: #333;
+        }
+
+        .math-problem {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #333;
+        }
+
+        .math-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .option-btn {
+            padding: 15px;
+            background: #f5f5f5;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .option-btn:hover {
+            background: #eee;
+            transform: translateY(-2px);
+        }
+
+        .option-btn.correct {
+            background: #333;
+            color: white;
+            border-color: #222;
+        }
+
+        .option-btn.wrong {
+            background: #666;
+            color: white;
+            border-color: #555;
+        }
+
+        .attention-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+            margin: 20px 0;
+        }
+
+        .attention-cell {
+            width: 50px;
+            height: 50px;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .attention-cell.target {
+            background: #333;
+            color: white;
+        }
+
+        .attention-cell.clicked {
+            background: #666;
+            transform: scale(0.95);
+        }
+
+        .controls {
+            margin-top: 20px;
+        }
+
+        .btn {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #222;
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            color: #999;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .feedback {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 15px 0;
+            min-height: 24px;
+        }
+
+        .feedback.correct {
+            color: #333;
+        }
+
+        .feedback.wrong {
+            color: #666;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #eee;
+            border-radius: 3px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #333;
+            transition: width 0.3s ease;
+        }
+
+        .game-info {
+            font-size: 16px;
+            margin: 15px 0;
+            color: #555;
+        }
+
+        @media (max-width: 480px) {
+            .memory-card {
+                width: 50px;
+                height: 50px;
+                font-size: 16px;
+            }
+            
+            .attention-cell {
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+            
+            .math-problem {
+                font-size: 28px;
+            }
+            
+            .option-btn {
+                padding: 12px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <div class="title">Cognitive Challenge Suite</div>
+            <div class="stats">
+                <span>Score: <span id="score">0</span></span>
+                <span>Level: <span id="level">1</span></span>
+                <span>Streak: <span id="streak">0</span></span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress"></div>
+            </div>
+        </div>
+
+        <div class="game-area" id="gameArea">
+            <div class="game-info">Ready to train your brain?</div>
+            <button class="btn" onclick="startGame()">Start Training</button>
+        </div>
+
+        <div class="feedback" id="feedback"></div>
+
+        <div class="controls">
+            <button class="btn" id="nextBtn" onclick="nextChallenge()" style="display: none;">Next Challenge</button>
+            <button class="btn" onclick="resetGame()">Reset</button>
+        </div>
+    </div>
+
+    <script>
+        let gameState = {
+            score: 0,
+            level: 1,
+            streak: 0,
+            currentGame: 0,
+            isPlaying: false,
+            totalChallenges: 0,
+            correctAnswers: 0
+        };
+
+        const games = [
+            'memory', 'math', 'attention', 'sequence'
+        ];
+
+        let currentSequence = [];
+        let playerSequence = [];
+        let memoryPattern = [];
+        let showingPattern = false;
+
+        function updateStats() {
+            document.getElementById('score').textContent = gameState.score;
+            document.getElementById('level').textContent = gameState.level;
+            document.getElementById('streak').textContent = gameState.streak;
+            
+            const progress = (gameState.correctAnswers / Math.max(gameState.totalChallenges, 1)) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+        }
+
+        function showFeedback(message, isCorrect) {
+            const feedback = document.getElementById('feedback');
+            feedback.textContent = message;
+            feedback.className = 'feedback ' + (isCorrect ? 'correct' : 'wrong');
+            
+            setTimeout(() => {
+                feedback.textContent = '';
+                feedback.className = 'feedback';
+            }, 2000);
+        }
+
+        function startGame() {
+            gameState.isPlaying = true;
+            gameState.totalChallenges = 0;
+            gameState.correctAnswers = 0;
+            nextChallenge();
+        }
+
+        function nextChallenge() {
+            gameState.currentGame = Math.floor(Math.random() * games.length);
+            gameState.totalChallenges++;
+            
+            const gameType = games[gameState.currentGame];
+            
+            switch(gameType) {
+                case 'memory':
+                    startMemoryGame();
+                    break;
+                case 'math':
+                    startMathGame();
+                    break;
+                case 'attention':
+                    startAttentionGame();
+                    break;
+                case 'sequence':
+                    startSequenceGame();
+                    break;
+            }
+            
+            document.getElementById('nextBtn').style.display = 'none';
+        }
+
+        function startMemoryGame() {
+            const gameArea = document.getElementById('gameArea');
+            gameArea.innerHTML = `
+                <div class="game-info">Memorize the pattern, then recreate it</div>
+                <div class="memory-grid" id="memoryGrid"></div>
+            `;
+
+            const grid = document.getElementById('memoryGrid');
+            const gridSize = Math.min(16, 8 + gameState.level);
+            memoryPattern = [];
+            
+            // Create grid
+            for(let i = 0; i < gridSize; i++) {
+                const card = document.createElement('div');
+                card.className = 'memory-card';
+                card.dataset.index = i;
+                card.onclick = () => selectMemoryCard(i);
+                grid.appendChild(card);
+            }
+
+            // Generate pattern
+            const patternLength = Math.min(8, 3 + Math.floor(gameState.level / 2));
+            for(let i = 0; i < patternLength; i++) {
+                memoryPattern.push(Math.floor(Math.random() * gridSize));
+            }
+
+            // Show pattern
+            showingPattern = true;
+            showMemoryPattern();
+        }
+
+        function showMemoryPattern() {
+            const cards = document.querySelectorAll('.memory-card');
+            cards.forEach(card => card.classList.remove('active'));
+            
+            memoryPattern.forEach((index, i) => {
+                setTimeout(() => {
+                    cards[index].classList.add('active');
+                    setTimeout(() => {
+                        cards[index].classList.remove('active');
+                        if(i === memoryPattern.length - 1) {
+                            showingPattern = false;
+                            playerSequence = [];
+                        }
+                    }, 600);
+                }, i * 800);
+            });
+        }
+
+        function selectMemoryCard(index) {
+            if(showingPattern) return;
+            
+            playerSequence.push(index);
+            document.querySelector(`[data-index="${index}"]`).classList.add('correct');
+            
+            if(playerSequence.length === memoryPattern.length) {
+                checkMemoryPattern();
+            }
+        }
+
+        function checkMemoryPattern() {
+            const correct = playerSequence.every((val, i) => val === memoryPattern[i]);
+            
+            if(correct) {
+                gameState.score += 10 * gameState.level;
+                gameState.streak++;
+                gameState.correctAnswers++;
+                showFeedback('Perfect memory!', true);
+                
+                if(gameState.streak >= 3) {
+                    gameState.level++;
+                    gameState.streak = 0;
+                    showFeedback(`Level up! Now level ${gameState.level}`, true);
+                }
+            } else {
+                gameState.streak = 0;
+                showFeedback('Try to focus on the pattern', false);
+            }
+            
+            updateStats();
+            setTimeout(() => {
+                document.getElementById('nextBtn').style.display = 'inline-block';
+            }, 1500);
+        }
+
+        function startMathGame() {
+            const gameArea = document.getElementById('gameArea');
+            const difficulty = gameState.level;
+            
+            let num1, num2, operation, answer, options;
+            
+            if(difficulty <= 2) {
+                num1 = Math.floor(Math.random() * 20) + 1;
+                num2 = Math.floor(Math.random() * 20) + 1;
+                operation = Math.random() < 0.5 ? '+' : '-';
+                answer = operation === '+' ? num1 + num2 : Math.max(num1, num2) - Math.min(num1, num2);
+            } else {
+                num1 = Math.floor(Math.random() * 15) + 2;
+                num2 = Math.floor(Math.random() * 12) + 2;
+                operation = Math.random() < 0.7 ? '*' : '/';
+                if(operation === '*') {
+                    answer = num1 * num2;
+                } else {
+                    answer = num1;
+                    num1 = num1 * num2;
+                }
+            }
+
+            options = [answer];
+            while(options.length < 4) {
+                let wrong = answer + (Math.floor(Math.random() * 10) - 5);
+                if(wrong !== answer && wrong > 0 && !options.includes(wrong)) {
+                    options.push(wrong);
+                }
+            }
+            
+            options = options.sort(() => Math.random() - 0.5);
+
+            gameArea.innerHTML = `
+                <div class="game-info">Solve the math problem quickly</div>
+                <div class="math-problem">${num1} ${operation} ${num2} = ?</div>
+                <div class="math-options" id="mathOptions"></div>
+            `;
+
+            const optionsDiv = document.getElementById('mathOptions');
+            options.forEach(option => {
+                const btn = document.createElement('div');
+                btn.className = 'option-btn';
+                btn.textContent = option;
+                btn.onclick = () => checkMathAnswer(option, answer);
+                optionsDiv.appendChild(btn);
+            });
+        }
+
+        function checkMathAnswer(selected, correct) {
+            const buttons = document.querySelectorAll('.option-btn');
+            buttons.forEach(btn => {
+                btn.onclick = null;
+                if(parseInt(btn.textContent) === correct) {
+                    btn.classList.add('correct');
+                } else if(parseInt(btn.textContent) === selected && selected !== correct) {
+                    btn.classList.add('wrong');
+                }
+            });
+
+            if(selected === correct) {
+                gameState.score += 15 * gameState.level;
+                gameState.streak++;
+                gameState.correctAnswers++;
+                showFeedback('Excellent calculation!', true);
+                
+                if(gameState.streak >= 3) {
+                    gameState.level++;
+                    gameState.streak = 0;
+                }
+            } else {
+                gameState.streak = 0;
+                showFeedback(`Correct answer: ${correct}`, false);
+            }
+            
+            updateStats();
+            setTimeout(() => {
+                document.getElementById('nextBtn').style.display = 'inline-block';
+            }, 1500);
+        }
+
+        function startAttentionGame() {
+            const gameArea = document.getElementById('gameArea');
+            gameArea.innerHTML = `
+                <div class="game-info">Click only the target symbols: ●</div>
+                <div class="attention-grid" id="attentionGrid"></div>
+            `;
+
+            const grid = document.getElementById('attentionGrid');
+            const symbols = ['●', '○', '■', '□', '▲', '△'];
+            const target = '●';
+            let targets = 0;
+            let clicked = 0;
+            let correctClicks = 0;
+
+            for(let i = 0; i < 25; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'attention-cell';
+                
+                const isTarget = Math.random() < 0.3;
+                if(isTarget) {
+                    cell.textContent = target;
+                    cell.classList.add('target');
+                    targets++;
+                } else {
+                    cell.textContent = symbols[Math.floor(Math.random() * (symbols.length - 1)) + 1];
+                }
+                
+                cell.onclick = () => {
+                    if(cell.classList.contains('clicked')) return;
+                    
+                    cell.classList.add('clicked');
+                    clicked++;
+                    
+                    if(cell.classList.contains('target')) {
+                        correctClicks++;
+                    }
+                    
+                    if(clicked === targets || correctClicks === targets) {
+                        checkAttentionScore(correctClicks, targets, clicked);
+                    }
+                };
+                
+                grid.appendChild(cell);
+            }
+        }
+
+        function checkAttentionScore(correct, total, clicked) {
+            const accuracy = correct / total;
+            const efficiency = correct / clicked;
+            
+            if(accuracy >= 0.8 && efficiency >= 0.7) {
+                gameState.score += 20 * gameState.level;
+                gameState.streak++;
+                gameState.correctAnswers++;
+                showFeedback('Great focus and accuracy!', true);
+                
+                if(gameState.streak >= 3) {
+                    gameState.level++;
+                    gameState.streak = 0;
+                }
+            } else {
+                gameState.streak = 0;
+                showFeedback('Focus on accuracy over speed', false);
+            }
+            
+            updateStats();
+            setTimeout(() => {
+                document.getElementById('nextBtn').style.display = 'inline-block';
+            }, 1500);
+        }
+
+        function startSequenceGame() {
+            const gameArea = document.getElementById('gameArea');
+            gameArea.innerHTML = `
+                <div class="game-info">Watch the sequence, then repeat it</div>
+                <div class="memory-grid" id="sequenceGrid"></div>
+            `;
+
+            const grid = document.getElementById('sequenceGrid');
+            currentSequence = [];
+            playerSequence = [];
+            
+            for(let i = 0; i < 9; i++) {
+                const card = document.createElement('div');
+                card.className = 'memory-card';
+                card.dataset.index = i;
+                card.textContent = i + 1;
+                card.onclick = () => addToPlayerSequence(i);
+                grid.appendChild(card);
+            }
+
+            const sequenceLength = Math.min(7, 3 + gameState.level);
+            for(let i = 0; i < sequenceLength; i++) {
+                currentSequence.push(Math.floor(Math.random() * 9));
+            }
+
+            showSequence();
+        }
+
+        function showSequence() {
+            showingPattern = true;
+            const cards = document.querySelectorAll('.memory-card');
+            
+            currentSequence.forEach((index, i) => {
+                setTimeout(() => {
+                    cards[index].classList.add('active');
+                    setTimeout(() => {
+                        cards[index].classList.remove('active');
+                        if(i === currentSequence.length - 1) {
+                            showingPattern = false;
+                        }
+                    }, 500);
+                }, i * 700);
+            });
+        }
+
+        function addToPlayerSequence(index) {
+            if(showingPattern) return;
+            
+            playerSequence.push(index);
+            
+            if(playerSequence[playerSequence.length - 1] !== currentSequence[playerSequence.length - 1]) {
+                gameState.streak = 0;
+                showFeedback('Sequence incorrect, try again', false);
+                updateStats();
+                setTimeout(() => {
+                    document.getElementById('nextBtn').style.display = 'inline-block';
+                }, 1500);
+                return;
+            }
+            
+            if(playerSequence.length === currentSequence.length) {
+                gameState.score += 25 * gameState.level;
+                gameState.streak++;
+                gameState.correctAnswers++;
+                showFeedback('Perfect sequence!', true);
+                
+                if(gameState.streak >= 3) {
+                    gameState.level++;
+                    gameState.streak = 0;
+                }
+                
+                updateStats();
+                setTimeout(() => {
+                    document.getElementById('nextBtn').style.display = 'inline-block';
+                }, 1500);
+            }
+        }
+
+        function resetGame() {
+            gameState = {
+                score: 0,
+                level: 1,
+                streak: 0,
+                currentGame: 0,
+                isPlaying: false,
+                totalChallenges: 0,
+                correctAnswers: 0
+            };
+            
+            document.getElementById('gameArea').innerHTML = `
+                <div class="game-info">Ready to train your brain?</div>
+                <button class="btn" onclick="startGame()">Start Training</button>
+            `;
+            
+            document.getElementById('feedback').textContent = '';
+            document.getElementById('nextBtn').style.display = 'none';
+            updateStats();
+        }
+
+        // Initialize
+        updateStats();
+    </script>
+</body>
+</html>
